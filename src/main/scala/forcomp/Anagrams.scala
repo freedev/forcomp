@@ -122,7 +122,15 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def occurrencesContain(x: Occurrences, y: Occurrences): Boolean = {
+    y.forall(p => {
+     (1 to p._2) exists (i => x.contains((p._1, i)) ) 
+    })
+  }
+  
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+      List()
+  }
 
   /** Returns a list of all anagram sentences of the given sentence.
    *
