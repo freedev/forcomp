@@ -12,17 +12,23 @@ class AnagramsSuite extends FunSuite  {
 
   test("wordOccurrences: abcd") {
     assert(wordOccurrences("abcd") === List(('a', 1), ('b', 1), ('c', 1), ('d', 1)))
+    assert(wordOccurrences("abcd").forall(p => List(('a', 1), ('b', 1), ('c', 1), ('d', 1)).contains(p)))
   }
 
   test("wordOccurrences: Robert") {
     assert(wordOccurrences("Robert") === List(('b', 1), ('e', 1), ('o', 1), ('r', 2), ('t', 1)))
+    assert(wordOccurrences("Robert").forall(p => List(('b', 1), ('e', 1), ('o', 1), ('r', 2), ('t', 1)).contains(p)))
   }
 
 
   test("sentenceOccurrences: abcd e") {
     assert(sentenceOccurrences(List("abcd", "e")) === List(('a', 1), ('b', 1), ('c', 1), ('d', 1), ('e', 1)))
+    assert(sentenceOccurrences(List("abcd", "e")).forall(p => List(('a', 1), ('b', 1), ('c', 1), ('d', 1), ('e', 1)).contains(p)))
   }
 
+  test("sentenceOccurrences: Roberto Carlos") {
+    assert(sentenceOccurrences(List("Roberto", "Carlos")).forall(p =>  List(('a',1), ('b',1), ('c',1), ('e',1), ('l',1), ('o',3), ('r',3), ('s',1), ('t',1)).contains(p)))
+  }
 
   test("dictionaryByOccurrences.get: eat") {
     assert(dictionaryByOccurrences.get(List(('a', 1), ('e', 1), ('t', 1))).map(_.toSet) === Some(Set("ate", "eat", "tea")))
