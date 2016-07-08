@@ -95,7 +95,22 @@ object Anagrams {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def iterOcc(curOcc : Occurrences, o: (Char, Int)): List[Occurrences] = {
+     (for (i <- (1 to o._2)) yield { (curOcc :+ (o._1, i)) }).toList
+  }
+
+  def combinations(occurrences: Occurrences): List[Occurrences] = {
+    def iter(h: Occurrences, t: Occurrences, rest: List[Occurrences], s : String): List[Occurrences] = {
+      if (t.isEmpty) {
+        rest :+ h
+      } else {
+        iterOcc(h, t.head).flatMap { x => iter(x, t.tail, rest, "R") } :::
+        iter(h, t.tail, rest, "L" )
+      }
+    }
+    if (occurrences.isEmpty) List(List())
+    else iter(List(), occurrences, List(), "S")
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    *

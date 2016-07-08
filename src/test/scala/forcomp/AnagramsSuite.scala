@@ -56,7 +56,17 @@ class AnagramsSuite extends FunSuite  {
   test("combinations: []") {
     assert(combinations(Nil) === List(Nil))
   }
+  
+  test("iterOcc: abba") {
+    val occ = List(('a', 2), ('b', 2))
+    
+    val verifyOcc = List(
+      List(('a',2), ('b',2), ('c',1)), List(('a',2), ('b',2), ('c',2)), List(('a',2), ('b',2), ('c',3))
+    )
+    assert(iterOcc(occ, ('c', 3)).toSet === verifyOcc.toSet)
+  }
 
+  
   test("combinations: abba") {
     val abba = List(('a', 2), ('b', 2))
     val abbacomb = List(
