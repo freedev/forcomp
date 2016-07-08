@@ -123,13 +123,38 @@ object Anagrams {
    *  and has no zero-entries.
    */
   def occurrencesContain(x: Occurrences, y: Occurrences): Boolean = {
-    y.forall(p => {
-     (1 to p._2) exists (i => x.contains((p._1, i)) ) 
+    val occSum = (x.map(a => (a._1, a._2, 0)) ::: y.map(a => (a._1, a._2, 1))).toList.groupBy( x => x._1 )
+    occSum.forall(p => {
+      val x1 = for(o <- p._2; if (o._3 == 0)) yield o._2
+      val y1 = for(o <- p._2; if (o._3 == 1)) yield o._2
+      (x1, y1) match {
+        case (Nil, _) => false
+        case (_, Nil) => true
+        case (_, _) => (x1.head >= y1.head)
+      }
     })
   }
   
   def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    val occSum = (x.map(a => (a._1, a._2, 0)) ::: y.map(a => (a._1, a._2, 1))).toList.groupBy( x => x._1 )
+    def iter(group: List[(Char, List[(Char, Int, Int)])], acc: Occurrences): Occurrences = {
+      group match {
+        case List() => acc
+        case p :: xs => {
+          val x1 = for(o <- p._2; if (o._3 == 0)) yield o._2
+          val y1 = for(o <- p._2; if (o._3 == 1)) yield o._2
+          (x1, y1) match {
+            case (Nil, _) => acc
+            case (_, Nil) => iter(group.tail, acc :+ (p._1, x1.head))
+            case (_, _) => iter(group.tail, (if (x1.head > y1.head) acc :+ (p._1, (x1.head - y1.head)) else acc))
+          }
+        }
+      }
+    }
+    if (!occurrencesContain(x, y))
       List()
+    else
+      iter(occSum.toList, List()).sortBy(_._1)
   }
 
   /** Returns a list of all anagram sentences of the given sentence.
